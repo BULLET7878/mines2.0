@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import './App.css';
-import Square from './square/square';
+import Square from './Square/Square';
 
 function getRandomInt(min, max) {
   min = Math.ceil(min);
