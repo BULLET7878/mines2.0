@@ -5,7 +5,7 @@ import goldIcon from '../assets/gold.png';
 import bombIcon from '../assets/bomb.png';
 import { useEffect, useState, useRef } from 'react';
 
-function Square({ mine, setGameOver, gameOver, setScore }) {
+function Square({ mine, setGameOver, gameOver, setScore, reset }) {
     const [image, setImage] = useState(null);
     const [isClicked, setIsClicked] = useState(false);
     const hoverSound = useRef(new Audio(hoverEffect));
@@ -17,10 +17,17 @@ function Square({ mine, setGameOver, gameOver, setScore }) {
         }
     }, [gameOver, mine]);
 
+    useEffect(() => {
+        setImage(null);
+        setIsClicked(false);
+    }, [reset]);
+
     function mouseEnterHandle() {
         if (!isClicked && !gameOver) {
-            hoverSound.current.currentTime = 0;
-            hoverSound.current.play();
+            if (hoverSound.current.paused) {
+                hoverSound.current.currentTime = 0;
+                hoverSound.current.play();
+            }
         }
     }
 
@@ -29,12 +36,13 @@ function Square({ mine, setGameOver, gameOver, setScore }) {
         setIsClicked(true);
 
         if (!mine) {
-            setScore(prevValue => prevValue +100 );
+            setScore(prevValue => prevValue + 100);
             setImage(goldIcon);
             diamondSound.current.currentTime = 0;
             diamondSound.current.play();
         } else {
-            setGameOver(true);
+            setImage(bombIcon);
+            setTimeout(() => setGameOver(true), 500);
         }
     }
 
